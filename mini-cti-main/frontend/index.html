@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TITAN - CTI Sharing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>TITAN - Decentralized CTI Sharing</h1>
+
+<div class="card">
+    <h2>Register Organization</h2>
+    <input type="text" id="orgName" placeholder="Organization Name">
+    <button onclick="registerOrg()">Register</button>
+</div>
+
+<div class="card">
+    <h2>Submit CTI</h2>
+    <input type="text" id="ctiData" placeholder="Enter Threat Data">
+    <button onclick="submitCTI()">Submit</button>
+</div>
+
+<div class="card">
+    <h2>View CTI</h2>
+    <button onclick="getCTI()">Load CTI</button>
+    <ul id="ctiList"></ul>
+</div>
+
+<div class="card">
+    <h2>Rate CTI</h2>
+    <input type="number" id="ctiId" placeholder="CTI ID">
+    <input type="number" id="score" placeholder="Score (1-5)">
+    <button onclick="rateCTI()">Submit Rating</button>
+</div>
+
+<div class="card">
+    <h2>Check Reputation</h2>
+    <input type="number" id="repOrgId" placeholder="Organization ID">
+    <button onclick="getReputation()">Check</button>
+    <p id="repResult"></p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
