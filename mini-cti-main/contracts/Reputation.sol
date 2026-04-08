@@ -5,13 +5,20 @@ import "./OrgRegistry.sol";
 import "./CTIRegistry.sol";
 
 contract Reputation {
-
+    struct RatingStats {
+        uint256 totalScore;
+        uint256 ratingCount;
+    }
+    
     OrgRegistry public orgRegistry;
     CTIRegistry public ctiRegistry;
 
     mapping(uint256 => uint256[]) private orgRatings;
     mapping(uint256 => uint256) public reputationScore;
-
+    
+    // Tracks the total score and vote count for specific CTI data
+    mapping(uint256 => RatingStats) public ctiRatings;
+    
     event RatingSubmitted(
         uint256 indexed ratedOrgId,
         uint256 score,
@@ -35,9 +42,15 @@ contract Reputation {
 
         require(producerOrgId != raterOrgId, "Cannot rate yourself");
 
+        // --- NEW: Track the specific CTI's rating ---
+        ctiRatings[_ctiId].totalScore += _score;
+        ctiRatings[_ctiId].ratingCount += 1;
+        // --------------------------------------------
+
+        // Update the Organization's overall rating history
         orgRatings[producerOrgId].push(_score);
 
-        // Calculate average
+        // Calculate new average for the Organization
         uint256 total = 0;
         for (uint256 i = 0; i < orgRatings[producerOrgId].length; i++) {
             total += orgRatings[producerOrgId][i];
@@ -51,5 +64,13 @@ contract Reputation {
 
     function getReputation(uint256 _orgId) external view returns (uint256) {
         return reputationScore[_orgId];
+    }
+
+    // --- NEW: Calculate the average rating for a specific CTI ID ---
+    function getAverageRating(uint256 _ctiId) external view returns (uint256) {
+        if (ctiRatings[_ctiId].ratingCount == 0) {
+            return 0; // Prevent divide-by-zero if no ratings yet
+        }
+        return ctiRatings[_ctiId].totalScore / ctiRatings[_ctiId].ratingCount;
     }
 }
